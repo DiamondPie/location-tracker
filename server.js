@@ -1,6 +1,12 @@
 // 引入必要的模块
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
+// 启用 CORS
+app.use(cors());  // 允许所有源访问，如果需要，可以限制特定域
+
+app.use(express.json());
 
 // 创建 Express 应用
 const app = express();
@@ -32,7 +38,7 @@ app.get('/api/location', (req, res) => {
 });
 
 // 设置服务器监听端口
-const PORT = process.env.PORT || 3000;
+const PORT = 3456;
 app.listen(PORT, () => {
     console.log(`服务器正在运行，端口号：${PORT}`);
 });
