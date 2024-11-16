@@ -3,13 +3,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+// 创建 Express 应用
+const app = express();
+
 // 启用 CORS
 app.use(cors());  // 允许所有源访问，如果需要，可以限制特定域
 
 app.use(express.json());
-
-// 创建 Express 应用
-const app = express();
 
 // 存储最新的位置信息
 let latestLocation = { latitude: 0, longitude: 0 };
