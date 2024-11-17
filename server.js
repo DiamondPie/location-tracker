@@ -18,6 +18,8 @@ let latestLocation = { latitude: 0, longitude: 0 };
 app.use(bodyParser.json());
 
 app.head('/heartbeat', (req, res) => {
+    const currentTime = new Date().toISOString();
+    console.log(`Heartbeat at: ${currentTime}`);
     res.status(200).end();
 });
 
