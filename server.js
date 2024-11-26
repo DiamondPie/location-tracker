@@ -17,7 +17,7 @@ app.use((req, res, next) => {
     } else {
       // 其他路径仅允许特定域
       cors({
-        origin: 'https://diamondpie.is-best.net',
+        origin: ['https://diamondpie.is-best.net', 'https://dp.upp.pw'],
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true,
       })(req, res, next);
