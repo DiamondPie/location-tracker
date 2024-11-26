@@ -9,18 +9,38 @@ const app = express();
 // 启用 CORS
 app.use(cors());  // 允许所有源访问，如果需要，可以限制特定域
 
-app.use(express.json());
+// 全局 CORS 配置，限制为特定域
+app.use((req, res, next) => {
+    if (req.path === '/heartbeat') {
+      // /heartbeat 允许任何来源
+      cors()(req, res, next);
+    } else {
+      // 其他路径仅允许特定域
+      cors({
+        origin: 'https://diamondpie.is-best.net',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true,
+      })(req, res, next);
+    }
+});
 
 // 存储最新的位置信息
-let latestLocation = { latitude: 0, longitude: 0 };
+let latestLocation = { latitude: 0, longitude: 0, timestamp: 0, online: false };
 
 // 使用 body-parser 中间件来解析 JSON 请求体
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+    res.status(200).send("Location Tracker服务端运行正常")
+});
+
 app.head('/heartbeat', (req, res) => {
     const currentTime = new Date().toISOString();
     console.log(`Heartbeat at: ${currentTime}`);
-    res.status(200).end();
+    if (Date.now() - latestLocation.timestamp > 2*60*1000) {
+        latestLocation.online = false;
+    }
+    res.status(206).end();
 });
 
 // POST 请求接口，用于更新位置
@@ -29,13 +49,13 @@ app.post('/api/update-location', (req, res) => {
 
     // 从环境变量中读取密码并验证
     if (!password || password !== process.env.PASSWORD) {
-        return res.status(404).send({success: false, message: '密码错误或未提供密码' });
+        return res.status(200).send({success: false, message: 'Unauthorized client' });
     }
 
     // 更新位置数据
-    latestLocation = { latitude, longitude };
+    latestLocation = { latitude, longitude, timestamp: Date.now(), online: true };
 
-    res.status(200).send({ success: true, message: '位置更新成功' });
+    res.status(200).send({ success: true, message: 'Updated successfully' });
 });
 
 // GET 请求接口，返回最新的位置信息
