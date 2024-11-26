@@ -53,7 +53,7 @@ app.post('/api/update-location', (req, res) => {
     }
 
     // 更新位置数据
-    latestLocation = { latitude, longitude, timestamp: Date.now(), online };
+    latestLocation = { latitude, longitude, online, timestamp: Date.now() };
 
     res.status(200).send({ success: true, message: 'Updated successfully' });
 });
