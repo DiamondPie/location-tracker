@@ -45,7 +45,7 @@ app.head('/heartbeat', (req, res) => {
 
 // POST 请求接口，用于更新位置
 app.post('/api/update-location', (req, res) => {
-    const { latitude, longitude, password } = req.body;
+    const { latitude, longitude, online, password } = req.body;
 
     // 从环境变量中读取密码并验证
     if (!password || password !== process.env.PASSWORD) {
@@ -53,7 +53,7 @@ app.post('/api/update-location', (req, res) => {
     }
 
     // 更新位置数据
-    latestLocation = { latitude, longitude, timestamp: Date.now(), online: true };
+    latestLocation = { latitude, longitude, timestamp: Date.now(), online };
 
     res.status(200).send({ success: true, message: 'Updated successfully' });
 });
